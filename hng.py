@@ -8,7 +8,7 @@ import ntpath
 def start():
     print("Hello and welcome")
 
-    filepath = input("Enter the file path: ")
+    filepath = input("Enter the file path of filename(if file is in current dir): ")
 
     process_file(filepath)
 
