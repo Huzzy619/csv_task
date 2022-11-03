@@ -5,28 +5,24 @@ import os
 import ntpath
 
 
-def convert_hash(value):
-    encoded = value.encode()
+def start():
+    print("Hello and welcome")
 
-    result = hashlib.sha256(encoded).hexdigest()
+    filepath = input("Enter the file path: ")
 
-    return result
+    process_file(filepath)
 
+    print("""
+    
+    Loading ...........................
 
-def get_output_name(path):
+    your file has been processed successfully.
 
-    head, tail = ntpath.split(path)  # extracts the filename from the path
+    and a <filename>.output.csv file have been created in the current working directory.
 
-    # removes the file extension
-
-    if tail:
-        file_name = tail.rsplit('.', 1)[0]
-
-    else:
-        file = ntpath.basename(head)
-        file_name = file.rsplit('.', 1)[0]
-
-    return file_name
+    All Json files have been stored in a 'JSON' directory 
+    
+    """)
 
 
 def process_file(filepath):
@@ -84,21 +80,29 @@ def process_file(filepath):
         exit()
 
 
-def start():
-    print("Hello and welcome")
+def convert_hash(value):
+    encoded = value.encode()
 
-    filepath = input("Enter the file path: ")
+    result = hashlib.sha256(encoded).hexdigest()
 
-    process_file(filepath)
-
-    print("""
-    
-    Loading ...........................
-
-    your file has been processed successfully.
-
-    All Json files have been stored in a 'JSON' directory 
-    """)
+    return result
 
 
+def get_output_name(path):
+
+    head, tail = ntpath.split(path)  # extract the filename from the path
+
+    # remove the file extension
+
+    if tail:
+        file_name = tail.rsplit('.', 1)[0]
+
+    else:
+        file = ntpath.basename(head)
+        file_name = file.rsplit('.', 1)[0]
+
+    return file_name
+
+
+# kick start the application
 start()
