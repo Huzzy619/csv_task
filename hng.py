@@ -1,62 +1,53 @@
 import hashlib
-import ntpath
+from pathlib import Path
 
 
-def convert_to_dict(value):
+class Helper:
+    
+    def convert_to_dict(self, value):
 
-    split_list = value.split(';')
+        split_list = value.split(';')
 
-    new = [i.strip() for i in split_list]
+        new = [i.strip() for i in split_list]
 
-    js = dict()
+        js = dict()
 
-    for string in new:
+        for string in new:
 
-        item = []
-        item2 = []
+            item = []
+            item2 = []
 
-        for i in string:
-            if i == ':':
-                break
-            item.append(i)
+            for i in string:
+                if i == ':':
+                    break
+                item.append(i)
 
-        key = ''.join(item)
+            key = ''.join(item)
 
-        for i in reversed(string):
-            if i == ':':
-                break
-            item2.append(i)
+            for i in reversed(string):
+                if i == ':':
+                    break
+                item2.append(i)
 
-        value = ''.join(item2)
-        value = value.strip()[::-1]
+            value = ''.join(item2)
+            value = value.strip()[::-1]
 
-        if value == 'none':
-            value = None
+            if value == 'none':
+                value = None
 
-        js[key] = value
+            js[key] = value
 
-    return js
+        return js
 
+    def get_output_name(self, path):
 
-def get_output_name(path):
+        file_name = Path(path).stem
 
-    head, tail = ntpath.split(path)  # extract the filename from the path
+        return file_name
 
-    # remove the file extension
+    def convert_hash(self, value):
+        encoded = value.encode()
 
-    if tail:
-        file_name = tail.rsplit('.', 1)[0]
+        result = hashlib.sha256(encoded).hexdigest()
 
-    else:
-        file = ntpath.basename(head)
-        file_name = file.rsplit('.', 1)[0]
-
-    return file_name
-
-
-def convert_hash(value):
-    encoded = value.encode()
-
-    result = hashlib.sha256(encoded).hexdigest()
-
-    return result
+        return result

@@ -1,16 +1,14 @@
 import json
 import csv
 import os
-from hng import convert_hash, convert_to_dict, get_output_name 
-
+from hng import Helper 
 
 def start():
 
     print("Hello and welcome")
 
-    filepath = input(
-        "Enter the file path of filename(if file is in current dir): ")
-
+    filepath = input("Enter the file path or filename(if file is in current dir): ")
+        
     process_file(filepath)
 
     print("""
@@ -29,10 +27,14 @@ def start():
 def process_file(filepath):
 
     data = []
-    # The sum of the entire entries minus the header
-    total_entries = sum(1 for _ in open(filepath)) - 1
+    help_to = Helper()
+
 
     try:
+        # The sum of the entire entries minus the header
+        total_entries = sum(1 for _ in open(filepath)) - 1
+
+    
         # Initial Opening of the csv file
         with open(filepath, encoding='utf-8') as csv_file:
             csv_reader = csv.DictReader(csv_file)
@@ -42,21 +44,15 @@ def process_file(filepath):
                 # Convert keys to lowercase
                 row = {key.lower(): val for key, val in row.items()}
                 value = row['filename']+'.json'
-                row['hash'] = convert_hash(value)
+                row['hash'] = help_to.convert_hash(value)
                 row['format'] = "CHIP-0007"
                 row['series_total'] = total_entries
                 row['sensitive_content'] = False
 
                 temp = row['attributes']
-                row['attributes'] = convert_to_dict(row['attributes'])
+                row['attributes'] = help_to.convert_to_dict(row['attributes'])
 
-                try:
-                    # attempt to cast to int
-                    row['series number'] = int(row['series number'])
-
-                except:  # FileNotFoundError:
-                    # if a non-number value is encountered, just skip and continue
-                    continue
+                row['series number'] = int(row['series number'])
 
                 # first create a folder to store the json files
                 if not os.path.isdir('JSON'):
@@ -78,7 +74,7 @@ def process_file(filepath):
         fields = list(data[0].keys())
 
         # sends the updated data into a new csv file
-        filename = get_output_name(filepath)
+        filename = help_to.get_output_name(filepath)
         with open(filename+'.output.csv', 'w', encoding='UTF8', newline='') as file:
             writer = csv.DictWriter(file, fieldnames=fields)
             writer.writeheader()
