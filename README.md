@@ -5,7 +5,7 @@
 
 
 ## 🚀 About Me
-I'm a full stack developer...
+I'm a Full Stack Web Developer...
 
 
 ## Author
@@ -18,7 +18,7 @@ I'm a full stack developer...
 Clone the project
 
 ```bash
-~$ git clone https://link-to-project.git
+~$ git clone https://github.com/Huzzy619/csv_task.git
 ```
 
 Navigate to project directory
@@ -46,7 +46,7 @@ Then execute project on command line
 
 ## Documentation
 
-[Documentation](https://linktodocumentation)
+[Documentation](https://github.com/Huzzy619/csv_task/blob/main/README.md)
 
 This Script is written in Python. 
 
@@ -78,7 +78,7 @@ A new csv `<filename>.output.csv` will also be created. it will have an addition
 ```
 
 `Note`
-    If the ouput file is open in any editor, aand you attempt to run main.py with the same csv file again, it will throw a PermissionError.
+    If the ouput file is open in any editor, and you attempt to run main.py with the same csv file again, it will throw a PermissionError.
     Endeavour to close any open file before repeating the procedure if you have to.
 
 ```bash
