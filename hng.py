@@ -1,91 +1,41 @@
-import json
 import hashlib
-import csv
-import os
 import ntpath
 
 
-def start():
-    print("Hello and welcome")
+def convert_to_dict(value):
 
-    filepath = input("Enter the file path of filename(if file is in current dir): ")
+    split_list = value.split(';')
 
-    process_file(filepath)
+    new = [i.strip() for i in split_list]
 
-    print("""
-    
-    Loading ...........................
+    js = dict()
 
-    your file has been processed successfully.
+    for string in new:
 
-    and a <filename>.output.csv file have been created in the current working directory.
+        item = []
+        item2 = []
 
-    All Json files have been stored in a 'JSON' directory 
-    
-    """)
+        for i in string:
+            if i == ':':
+                break
+            item.append(i)
 
+        key = ''.join(item)
 
-def process_file(filepath):
+        for i in reversed(string):
+            if i == ':':
+                break
+            item2.append(i)
 
-    data = []
-    total_entries = sum(1 for _ in open(filepath)) - 40
+        value = ''.join(item2)
+        value = value.strip()[::-1]
 
-    try:
-        # Initial Opening of the csv file
-        with open(filepath, encoding='utf-8') as csv_file:
-            csv_reader = csv.DictReader(csv_file)
+        if value == 'none':
+            value = None
 
-            for row in csv_reader:
+        js[key] = value
 
-                # Convert keys to lowercase
-                row = {key.lower(): val for key, val in row.items()}
-
-                row['hash'] = convert_hash(row['filename']+'.json')
-                row['format'] = "CHIP-0007"
-                row['series_total'] = total_entries
-                row['sensitive_content'] = False
-
-                try:
-                    # attempt to cast to int
-                    row['series number'] = int(row['series number'])
-
-                except:  # FileNotFoundError:
-                    # if a non-number value is encountered, just skip and continue
-                    continue
-
-                data.append(row)
-
-                # first create a folder to store the json files
-                if not os.path.isdir('JSON'):
-                    os.mkdir('JSON')
-
-                # converts each row entry to a json
-                with open(os.path.join('JSON', row['filename']+'.json'), 'w', encoding='utf-8') as jsonfile:
-                    jsonfile.write(json.dumps(row, indent=4))
-
-        # Get the list of fieldnames/keys/columns
-        fields = list(data[0].keys())
-
-        # sends the updated data into a new csv file
-        filename = get_output_name(filepath)
-        with open(filename+'.output.csv', 'w', encoding='UTF8', newline='') as file:
-            writer = csv.DictWriter(file, fieldnames=fields)
-            writer.writeheader()
-            writer.writerows(data)
-
-    except:
-        print("\nerror: Invalid file path")
-        print("Please confirm that the file path or file name is correct")
-
-        exit()
-
-
-def convert_hash(value):
-    encoded = value.encode()
-
-    result = hashlib.sha256(encoded).hexdigest()
-
-    return result
+    return js
 
 
 def get_output_name(path):
@@ -104,5 +54,9 @@ def get_output_name(path):
     return file_name
 
 
-# kick start the application
-start()
+def convert_hash(value):
+    encoded = value.encode()
+
+    result = hashlib.sha256(encoded).hexdigest()
+
+    return result
